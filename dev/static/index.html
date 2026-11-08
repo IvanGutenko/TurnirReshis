@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Решись Авиа — прогноз продаж</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E✈%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">✈</span> Решись Авиа <span class="muted">· прогноз продаж</span></div>
+  <div id="userbox" class="userbox" hidden>
+    <span id="username"></span>
+    <button id="logout" class="link">Выйти</button>
+  </div>
+</header>
+
+<main>
+  <!-- Вход / регистрация -->
+  <section id="auth" class="card auth" hidden>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-mode="login" role="tab">Вход</button>
+      <button class="tab" data-mode="register" role="tab">Регистрация</button>
+    </div>
+    <form id="authform" autocomplete="on">
+      <label>Логин
+        <input name="login" required minlength="3" maxlength="32" autocomplete="username" placeholder="например, agent_01">
+      </label>
+      <label>Пароль
+        <input name="password" type="password" required minlength="6" autocomplete="current-password" placeholder="не короче 6 символов">
+      </label>
+      <button type="submit" class="primary" id="authsubmit">Войти</button>
+      <p class="error" id="autherror" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- Прогноз -->
+  <section id="app" hidden>
+    <form id="fform" class="card form">
+      <label>Откуда
+        <select name="origin" id="origin"></select>
+      </label>
+      <label>Куда
+        <select name="destination" id="destination"></select>
+      </label>
+      <label>Дата вылета
+        <input type="date" name="date" id="date" required>
+      </label>
+      <label>Цена билета, ₽
+        <input type="number" name="price" id="price" required min="1" step="1" inputmode="numeric">
+      </label>
+      <button type="submit" class="primary">Рассчитать</button>
+      <p class="error wide" id="ferror" role="alert"></p>
+    </form>
+
+    <div id="result" hidden>
+      <div class="stats">
+        <div class="stat"><div class="label">Мест в самолётах</div><div class="value" id="s-seats"></div></div>
+        <div class="stat"><div class="label">Желают купить <span class="muted">(медиана)</span></div><div class="value" id="s-want"></div></div>
+        <div class="stat accent"><div class="label">Прогноз продаж</div><div class="value" id="s-buy"></div></div>
+        <div class="stat"><div class="label">Свободных мест</div><div class="value" id="s-free"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="chart-head">
+          <h2 id="chart-title">Распределение спроса при этой цене</h2>
+          <div class="legend">
+            <span><i class="sw want"></i>желают</span>
+            <span><i class="sw over"></i>больше, чем мест</span>
+            <span><i class="sw seats"></i>мест</span>
+          </div>
+        </div>
+        <div id="chart" class="chart" aria-label="График сценариев спроса"></div>
+        <p class="note" id="chart-note"></p>
+        <details>
+          <summary>Таблица сценариев</summary>
+          <table id="table"><thead><tr><th>Квантиль</th><th>Спрос при базовой цене</th><th>Желают при вашей цене</th><th>Купят</th></tr></thead><tbody></tbody></table>
+        </details>
+      </div>
+      <p class="muted small" id="formula">Желают = спрос при базовой цене − чувствительность × (цена − базовая цена); купят = min(мест, max(0, желают)).</p>
+    </div>
+  </section>
+</main>
+<footer class="muted small" id="source"></footer>
+<script src="/app.js"></script>
+</body>
+</html>
